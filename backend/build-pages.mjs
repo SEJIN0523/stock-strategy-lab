@@ -12,8 +12,8 @@ published.quotes=snapshot.quotes.map(q=>pick(q,['code','name','market','date','p
 published.candidates=snapshot.candidates.map(c=>pick(c,['code','price','mom6','mom12','lowVol','momentum','score','rank','name','market']));
 let status={state:'not_run'};
 try {status=pick(JSON.parse(await readFile(resolve(root,'private-data/daily/refresh-status.json'),'utf8')),['schema','state','mode','startedAt','finishedAt','asOf','candidates']);}catch(error){if(error.code!=='ENOENT')throw error;}
-const copied=['encrypted-data.js','daily-decision.js','taxes.js','style.css','icon.svg'];
-const files=new Map(await Promise.all(copied.map(async name=>[name,await readFile(resolve(root,name),'utf8')])));
+const copied=['icons/icon-192.png','icons/icon-512.png','pwa-install.js','encrypted-data.js','daily-decision.js','taxes.js','style.css','icon.svg'];
+const files=new Map(await Promise.all(copied.map(async name=>[name,await readFile(resolve(root,name))])));
 const html=(await readFile(resolve(root,'daily.html'),'utf8')).replace('<a class="daily-link" href="./">연구 실험실</a>','<span class="help">매매 노트</span>');
 files.set('index.html',html);files.set('daily.html',html);
 let ui=await readFile(resolve(root,'daily-ui.js'),'utf8');
@@ -24,14 +24,14 @@ if(!ui.includes(source)||!ui.includes(statusSource))throw Error('분석 경로 �
 ui=ui.replace(source,'const bundle=await loadPublishedBundle();const response={ok:true,json:async()=>bundle.snapshot};');
 ui=ui.replace(statusSource,'const statusResponse={ok:true,json:async()=>bundle.status};');
 files.set('daily-ui.js',ui);
-files.set('manifest.webmanifest',JSON.stringify({name:'종목연구소 · 매매 노트',short_name:'종목연구소',lang:'ko',start_url:'./',scope:'./',display:'standalone',background_color:'#f3f5f9',theme_color:'#101b30',icons:[{src:'icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]}));
+files.set('manifest.webmanifest',JSON.stringify({...JSON.parse(await readFile(resolve(root,'manifest.webmanifest'),'utf8')),start_url:'./'}));
 const keyPath=resolve(root,'private-data/daily/publish-key.json');
 let key;
 try {key=JSON.parse(await readFile(keyPath,'utf8')).key;}catch(error){if(error.code!=='ENOENT')throw error;key=randomBytes(32).toString('base64url');await writeFile(keyPath,JSON.stringify({schema:'daily.publish-key.v1',key}),{flag:'wx'});}
 if(typeof key!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(key))throw Error('배포 키 파일을 확인하세요.');
 files.set('data/analysis.enc.json',JSON.stringify(sealBundle({snapshot:published,status},key)));
 const assets=[...files.keys()].filter(p=>!p.startsWith('data/')).map(p=>'./'+p);assets.push('./');
-const version=createHash('sha256').update([...files.values()].join('')).digest('hex').slice(0,16);
+const version=createHash('sha256').update(Buffer.concat([...files.values()].map(v=>Buffer.isBuffer(v)?v:Buffer.from(v)))).digest('hex').slice(0,16);
 files.set('sw.js',`const CACHE='kr-strategy-pages-${version}',ASSETS=${JSON.stringify(assets)};
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('kr-strategy-pages-')&&k!==CACHE).map(k=>caches.delete(k))))));
