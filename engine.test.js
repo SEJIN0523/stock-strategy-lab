@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {demoData,backtest} from './engine.js';
+const p={ma:60,lookback:20,maxHold:5,rebalance:20,initial:10000000,fee:.015,tax:.2,slippage:.1,period:'validation'};
+test('deterministic demo, finite results and separate validation dates',()=>{const a=backtest(demoData(),p),b=backtest(demoData(),p);assert.deepEqual(a,b);assert.ok(a.start>backtest(demoData(),{...p,period:'train'}).end);assert.ok(a.cash>=-.001);assert.ok(a.curve.every(r=>Number.isFinite(r.equity)&&r.equity>=0));assert.ok(a.mdd<=0);});
+test('a changed same-day close cannot change its opening orders',()=>{const data=demoData();const a=backtest(data,p);const first=data.dates.indexOf(a.start);for(const stock of data.stocks)stock.bars[first].close*=100;const b=backtest(data,p);assert.deepEqual(a.trades.filter(t=>t.date===a.start),b.trades.filter(t=>t.date===b.start));});
+test('higher costs reduce equity for a fixed one-stock upward market',()=>{const dates=Array.from({length:30},(_,i)=>`2024-01-${String(i+1).padStart(2,'0')}`);const data={dates,stocks:[{code:'DEMO',name:'가상',bars:dates.map((date,i)=>({date,open:100+i,close:101+i}))}]};const settings={...p,ma:2,lookback:2,maxHold:1,rebalance:2,period:'all'};const a=backtest(data,{...settings,fee:0,tax:0,slippage:0});const b=backtest(data,{...settings,fee:1,tax:1,slippage:1});assert.ok(a.curve.at(-1).equity>b.curve.at(-1).equity);assert.ok(b.totalCosts>0);});
+test('flat prices yield no candidates, trades, or loss',()=>{const data=demoData();for(const stock of data.stocks)for(const bar of stock.bars){bar.open=100;bar.close=100;}const r=backtest(data,p);assert.equal(r.trades.length,0);assert.equal(r.return,0);assert.equal(r.mdd,0);});

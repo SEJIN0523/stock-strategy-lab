@@ -1,0 +1,15 @@
+{
+  "id":"momentum-A-position-count-v1",
+  "fixedBeforeSizeComparison":"2026-10-22",
+  "status":"exploratory_no_selected_count",
+  "baseStrategy":"M1",
+  "positionCounts":[3,5,7,10],
+  "allocation":"initial position budget = signal NAV / N; at most N holdings; no forced full investment or additional purchases",
+  "entry":"new entries from top N; other universe and selection-cycle rules unchanged",
+  "exit":"same MA60, 15% trailing stop and retain-through-rank20 rule for all N",
+  "costs":"same zero commission/slippage and dated sale taxes as base research",
+  "objectives":["net cumulative return","maximum drawdown","mean and maximum actual holdings","mean,95th-percentile and maximum daily order attempts","days requiring an order and fills"],
+  "comparison":"same input/windows; use common observed prefix when data censor; report observed session count; no winner selection from short incomplete periods",
+  "decisionPolicy":"Seek a stable return/drawdown/workload tradeoff across sequential periods, not the single highest retrospective return. Prefer fewer holdings only when performance/risk are close under criteria fixed before final selection. No user workload cap or acceptable performance difference has yet been fixed.",
+  "caveats":["Sizes chosen after earlier M1/M2 research was viewed; retrospective not untouched validation","Daily order counts are workload proxies, not measured user time","3-stock allocation can concentrate roughly one third of NAV in a new holding; concentration risk must be compared","Do not exclude future corporate-event names retrospectively to complete performance"]
+}

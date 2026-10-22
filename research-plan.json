@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "purpose": "KRX 비수정 가격을 사용한 최초 예비 전략 비교. 실전 추천 및 자동 주문에 사용하지 않음.",
+  "requestedStart": "2024-10-21",
+  "requestedEnd": "2026-10-20",
+  "trainingFraction": 0.7,
+  "commonWarmup": 120,
+  "movingAverages": [20, 60, 120],
+  "lookbacks": [20, 60],
+  "maxHoldings": [5, 10],
+  "rebalanceTradingDays": 20,
+  "initialCapital": 10000000,
+  "assumedCostsPercent": { "fee": 0, "tax": 0.2, "slippage": 0 },
+  "taxMode": "krx-2024-2026",
+  "stressCostsPercent": null,
+  "validationStatus": "사용자 요청 비용 변경으로 재계산 · 기존 검증 구간 재사용",
+  "maximumTrainingDrawdown": 0.3,
+  "selectionRule": "개발 구간 MDD 30% 이하 후보 중 누적수익률 최대. 동률은 MDD가 작은 후보, 그 다음 고정 후보 번호 순. 적합 후보가 없으면 선택하지 않음.",
+  "baseline": { "ma": 60, "lookback": 20, "maxHold": 5 },
+  "validationRule": "선정 전략과 사전에 정한 기본 전략만 뒤쪽 30%에서 평가. 검증 결과로 재선정하지 않음. 각 구간은 같은 초기 현금에서 별도 시작.",
+  "limitations": [
+    "사용자 요청: 수수료·체결가격 차이 0. 매도 거래세(코스피 농특세 포함)만 체결일별 적용. 개인별 양도소득세·배당소득세 미반영",
+    "이미 평가한 검증 구간을 사용자 요청에 따른 비용 변경으로 재계산. 새로운 독립 검증이 아님",
+    "비수정 가격·기업행사 미보정",
+    "상장폐지·거래정지·과거 종목 완전성 미검증",
+    "상하한가·호가·유동성에 따른 실제 체결 가능성 미반영",
+    "12개 후보 중 선택한 예비 연구이며 미래 수익 보장 또는 충분한 장기 검증이 아님"
+  ]
+}

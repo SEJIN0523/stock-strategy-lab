@@ -1,0 +1,21 @@
+{
+  "id": "momentum-A-v1",
+  "frozenBeforeFirstRun": "2026-10-22",
+  "status": "exploratory_price_return_research_not_live_recommendations",
+  "development": ["2024-01-02", "2024-12-30"],
+  "retrospectiveValidation": ["2025-01-02", "2026-10-20"],
+  "untouchedValidation": false,
+  "initialCash": 100000000,
+  "universe": {"requiredSessions": 253, "minimumPrice": 1000, "minimumTurnover20": 1000000000, "minimumMarketCap": 100000000000, "maximumRawUpMove": 0.35, "maximumRawDownMove": 0.35, "priceAboveMA120": true, "positiveMomentum6And12_1": true},
+  "candidates": [
+    {"id":"M1", "name":"기본 모멘텀", "momentumWeight":1, "lowVolatilityWeight":0},
+    {"id":"M2", "name":"변동성 조절 모멘텀", "momentumWeight":0.8, "lowVolatilityWeight":0.2}
+  ],
+  "score": "momentum=(percentile(C[T]/C[T-126]-1)+percentile(C[T-21]/C[T-252]-1))/2; volatility=sample standard deviation of 60 log returns; ties use average rank; singleton=50; score=momentumWeight*momentum+lowVolatilityWeight*percentile(-volatility)",
+  "portfolio": {"maximumPositions":10,"newEntryTopRanks":10,"retainThroughRank":20,"selectionEverySessions":5,"rankCycleAnchor":"first signal session of each evaluation window","initialPositionFraction":0.1,"additionalPurchases":false,"sectorCapEnabled":false},
+  "exits": {"dailyBelowMA60":true,"trailingStopFraction":0.15,"stopNeverFalls":true,"weeklyMissingEligibility":"exit_at_next_close","priority":["stop","MA60","selection_rank"]},
+  "execution": {"policy":"A","signal":"T_close","fill":"T_plus_1_KRX_close_proxy","fixedQuantityAtSignal":true,"sameAuctionAnticipatedSalesFundBuys":false,"buyGapExceedsReservedBudget":"cancel_not_resize","dailyVolumeParticipation":0.01,"unfilledBuyRemainder":"cancel","unfilledSellRemainder":"carry","newEntriesOnlyOnSelectionSessions":true},
+  "costs": {"commission":0,"slippage":0,"taxMode":"krx-2024-2026","cashInterest":0,"cashDividends":"not_credited_price_return_only"},
+  "dataGates": {"heldMissingValuation":"censor_entire_account","heldShareChangeAboveFraction":0.001,"heldUnresolvedShareChange":"censor_entire_account","pendingBuyShareChange":"cancel","futureEventSecurityExclusion":false},
+  "interpretation": "No winner selection in this first run. Compare common observed prefix only if accounts censor at different dates. Security type master, sectors, cash dividends and corporate entitlements are incomplete. All thresholds are fixed initial research assumptions, not optimal or user risk-tolerance values. M3 financial-quality candidate is deferred until point-in-time financial data are verified. No UI signal or broker order generated."
+}

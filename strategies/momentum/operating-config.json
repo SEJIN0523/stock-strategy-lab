@@ -1,0 +1,8 @@
+{
+  "variant":"M1_development",
+  "temporaryMaxPositions":5,
+  "selectedMaxPositions":null,
+  "candidateDisplayCount":15,
+  "status":"temporary_development_value_not_optimized",
+  "note":"First manual-use prototype uses 5 slots provisionally. Final holding count will be determined from return, drawdown and workload comparisons. Candidate list length does not force holding count. Existing holdings are not forcibly sold just because the cap changes."
+}

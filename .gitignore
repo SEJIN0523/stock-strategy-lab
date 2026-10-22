@@ -3,7 +3,7 @@
 !.env.example
 node_modules/
 dist/
-private-data/
 __pycache__/
 *.pyc
+private-data/
 *.tmp

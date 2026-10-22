@@ -1,0 +1,16 @@
+{
+  "id": "claude-close-v1-research",
+  "status": "specification_and_components_only",
+  "liveTradingEnabled": false,
+  "weights": {"size": 0.4, "trend": 0.4, "growth": 0.2},
+  "history": {"rangeBars": 252, "momentumFromLag": 252, "momentumToLag": 21, "requiredBars": 253},
+  "baseUniverse": {"minimumPrice": 1000, "minimumAverageTurnover20": 300000000, "minimumPbr": 0.05, "maxAbsLogMove": 0.35, "requirePointInTimeFinancials": true, "requireAdjustedPriceHistory": true},
+  "recommendation": {"maximumTopPercent": 20, "minimumAverageTurnover20": 1000000000, "minimumMarketCap": 100000000000, "requirePositiveEps": true, "blockedDailyReturnAtOrBelow": -0.08, "maximumCandidates": 15, "maximumPerSector": 3, "requireHistoricalSector": true},
+  "portfolio": {"targetPositions": 10, "maximumPositions": 10, "maximumPerSector": 3, "targetValueBasis": "entry_signal_NAV_divided_by_targetPositions", "freezeTargetUntilExit": true, "forceFullInvestment": false},
+  "entry": {"tranches": 3, "earliestTradingSessionsFromFirstFill": [0,5,10], "minimumSessionsFromLastFill": 5, "maximumTargetFillRatioBeforeAdd": 0.95, "independentRestorePurchases": false, "exploratoryAutoPurchases": false},
+  "exit": {"holdThroughTopPercent": 40, "fullExitAboveTopPercent": 70, "partialSellFraction": 0.5, "partialSellMinimumValueRatio": 0.6, "partialSellOncePerRankEpisode": true, "resetPartialLatchAtOrBelowTopPercent": 40},
+  "stop": {"mode": "fixed_at_first_fill_research_baseline", "returnFraction": -0.15, "ratchetNeverDown": true, "noAddWithinDistanceFraction": 0.05, "calibratedDistributionEnabled": false},
+  "execution": {"signal": "T_close", "fill": "T_plus_1_regular_KRX_close", "quantityReference": "T_close", "sameAuctionSaleProceedsMayFundBuys": false, "rejectIfFillExceedsReservedCash": true, "cancelAfterOneExecutionSession": true, "limitOrSuspendedFillNotGuaranteed": true},
+  "costs": {"feePercent": 0, "slippagePercent": 0, "taxMode": "krx-2024-2026"},
+  "research": {"existing2026HoldoutIsExploratory": true, "fullBacktestEnabled": false, "missingRequiredDataPolicy": "block_not_neutral_fill", "optionalGrowthMissingPercentile": 50, "noFutureReturnCalibration": true}
+}
