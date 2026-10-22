@@ -23,7 +23,7 @@ export function validateAccount(account) {
 }
 export function recordTrade(account,trade) {
   validateAccount(account);
-  if(!codeOk(trade.code)||!['buy','sell'].includes(trade.side)||!validDate(trade.date)||!Number.isSafeInteger(trade.qty)||trade.qty<1||!(Number.isFinite(trade.price)&&trade.price>0)||!trade.id)throw Error('실제 체결한 종목·날짜·가격·정수 수량을 입력하세요.');
+  if(!codeOk(trade.code)||!['buy','sell'].includes(trade.side)||!validDate(trade.date)||!Number.isSafeInteger(trade.qty)||trade.qty<1||!(Number.isFinite(trade.price)&&trade.price>0)||(typeof trade.id!=='string'||!trade.id))throw Error('실제 체결한 종목·날짜·가격·정수 수량을 입력하세요.');
   const log=account.log||[],prior=log.find(x=>x.id===trade.id);
   if(prior) {
     if(['code','side','date','qty','price','market'].some(k=>prior[k]!==trade[k]))throw Error('같은 기록 ID의 체결 내용이 다릅니다.');

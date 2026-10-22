@@ -34,3 +34,7 @@ GitHub Pages 배포 문서: https://docs.github.com/en/pages/getting-started-wit
 ## Android 설치
 
 192·512px PNG 아이콘과 standalone manifest, 서비스워커 및 앱 설치/설치 안내 버튼을 제공합니다. Chrome이 beforeinstallprompt를 제공하면 버튼으로 설치 창을 열며, 그렇지 않으면 Chrome 메뉴의 홈 화면에 추가 안내를 표시합니다. 앱 내 브라우저에서는 Chrome으로 다시 열어야 할 수 있습니다. 설치된 단독 실행 화면에서는 설치 영역을 숨깁니다. 실제 휴대전화의 설치 완료 여부는 사용자 기기에서 확인해야 합니다.
+
+## 사진 인식 자산
+
+정적 허용 목록은 backend/web-assets.mjs에서 관리합니다. OCR 엔진·한국어/영어 학습 파일은 vendor/ocr에 두며 PNG·WASM·gzip은 base64 blob으로 발행합니다. 사진 자체와 인식한 개인 내역은 발행하지 않습니다. 서비스워커는 OCR 파일을 최초 이용 시 캐시하고 설치 시 미리 내려받지 않습니다. 첨부 사진 시험에서 10건의 수량·가격 일치를 확인했으며, 불확실한 종목명 2건은 수동 선택 단계로 남겼습니다. 다른 사진에서도 같은 정확도를 보장하지 않습니다.

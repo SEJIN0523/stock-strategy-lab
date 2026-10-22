@@ -1,0 +1,4 @@
+Tesseract.js 7.0.0 and tesseract.js-core 7.0.0: Apache-2.0. https://github.com/naptha/tesseract.js
+Korean traineddata supplied by the user for this project; SHA-256: 6b85e11d9bbf07863b97b3523b1b112844c43e713df8b66418a081fd1060b3b2
+Images and recognized trading records are processed locally and are not part of these assets.
+English model: tesseract-ocr/tessdata_fast (Apache-2.0), https://github.com/tesseract-ocr/tessdata_fast

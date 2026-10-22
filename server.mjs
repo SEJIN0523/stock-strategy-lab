@@ -1,11 +1,12 @@
+import {STATIC_ASSETS} from './backend/web-assets.mjs';
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { loadSettings } from './backend/settings.mjs';
 import { fileURLToPath } from 'node:url';
 import { openMarketDb, dbSummary } from './backend/market-db.mjs';
 loadSettings();
-const allowed = new Set(['icons/icon-192.png','icons/icon-512.png','pwa-install.js','index.html','daily.html','daily-ui.js','daily-decision.js','style.css','app.js','research-ui.js','engine.js','taxes.js','market-data.js','manifest.webmanifest','sw.js','icon.svg']);
-const mime = {png:'image/png',html:'text/html; charset=utf-8',css:'text/css',js:'text/javascript',webmanifest:'application/manifest+json',svg:'image/svg+xml'};
+const allowed = new Set([...STATIC_ASSETS,'icons/icon-192.png','icons/icon-512.png','pwa-install.js','index.html','daily.html','daily-ui.js','daily-decision.js','style.css','app.js','research-ui.js','engine.js','taxes.js','market-data.js','manifest.webmanifest','sw.js','icon.svg']);
+const mime = {wasm:'application/wasm',gz:'application/gzip',txt:'text/plain; charset=utf-8',png:'image/png',html:'text/html; charset=utf-8',css:'text/css',js:'text/javascript',webmanifest:'application/manifest+json',svg:'image/svg+xml'};
 http.createServer(async (req,res) => {
   if(!['localhost:4173','127.0.0.1:4173'].includes(req.headers.host)) {res.writeHead(403);res.end();return;}
   if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405);res.end();return;}

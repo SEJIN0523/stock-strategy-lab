@@ -1,3 +1,4 @@
+import {STATIC_ASSETS,OCR_ASSETS} from './web-assets.mjs';
 import { readFile,writeFile,mkdir,readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { resolve,relative } from 'node:path';
@@ -12,7 +13,7 @@ published.quotes=snapshot.quotes.map(q=>pick(q,['code','name','market','date','p
 published.candidates=snapshot.candidates.map(c=>pick(c,['code','price','mom6','mom12','lowVol','momentum','score','rank','name','market']));
 let status={state:'not_run'};
 try {status=pick(JSON.parse(await readFile(resolve(root,'private-data/daily/refresh-status.json'),'utf8')),['schema','state','mode','startedAt','finishedAt','asOf','candidates']);}catch(error){if(error.code!=='ENOENT')throw error;}
-const copied=['icons/icon-192.png','icons/icon-512.png','pwa-install.js','encrypted-data.js','daily-decision.js','taxes.js','style.css','icon.svg'];
+const copied=STATIC_ASSETS;
 const files=new Map(await Promise.all(copied.map(async name=>[name,await readFile(resolve(root,name))])));
 const html=(await readFile(resolve(root,'daily.html'),'utf8')).replace('<a class="daily-link" href="./">연구 실험실</a>','<span class="help">매매 노트</span>');
 files.set('index.html',html);files.set('daily.html',html);
@@ -30,12 +31,12 @@ let key;
 try {key=JSON.parse(await readFile(keyPath,'utf8')).key;}catch(error){if(error.code!=='ENOENT')throw error;key=randomBytes(32).toString('base64url');await writeFile(keyPath,JSON.stringify({schema:'daily.publish-key.v1',key}),{flag:'wx'});}
 if(typeof key!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(key))throw Error('배포 키 파일을 확인하세요.');
 files.set('data/analysis.enc.json',JSON.stringify(sealBundle({snapshot:published,status},key)));
-const assets=[...files.keys()].filter(p=>!p.startsWith('data/')).map(p=>'./'+p);assets.push('./');
+const assets=[...files.keys()].filter(p=>!p.startsWith('data/')&&!p.startsWith('vendor/')).map(p=>'./'+p);assets.push('./');
 const version=createHash('sha256').update(Buffer.concat([...files.values()].map(v=>Buffer.isBuffer(v)?v:Buffer.from(v)))).digest('hex').slice(0,16);
-files.set('sw.js',`const CACHE='kr-strategy-pages-${version}',ASSETS=${JSON.stringify(assets)};
+files.set('sw.js',`const CACHE='kr-strategy-pages-${version}',ASSETS=${JSON.stringify(assets)},LAZY=${JSON.stringify(OCR_ASSETS.map(p=>'./'+p))};
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('kr-strategy-pages-')&&k!==CACHE).map(k=>caches.delete(k))))));
-self.addEventListener('fetch',event=>{const u=new URL(event.request.url);if(event.request.method!=='GET'||u.origin!==self.location.origin||!ASSETS.some(path=>new URL(path,self.registration.scope).href===u.href))return;event.respondWith(fetch(event.request).then(response=>{if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(c=>c.put(event.request,copy)));}return response;}).catch(()=>caches.match(event.request)));});`);
+self.addEventListener('fetch',event=>{const u=new URL(event.request.url);if(event.request.method!=='GET'||u.origin!==self.location.origin||![...ASSETS,...LAZY].some(path=>new URL(path,self.registration.scope).href===u.href))return;event.respondWith(fetch(event.request).then(response=>{if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(c=>c.put(event.request,copy)));}return response;}).catch(()=>caches.match(event.request)));});`);
 files.set('.nojekyll','');
 await mkdir(output,{recursive:true});
 async function inspect(dir){for(const entry of await readdir(dir,{withFileTypes:true})){const path=resolve(dir,entry.name);if(entry.isSymbolicLink())throw Error('배포 폴더에 링크가 있습니다.');if(entry.isDirectory())await inspect(path);else if(!files.has(relative(output,path).replaceAll('\\','/')))throw Error('배포 폴더에 허용하지 않은 파일이 있습니다.');}}
