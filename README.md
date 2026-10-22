@@ -19,7 +19,7 @@ node backend/research.mjs
 
 ## 데이터베이스와 증분 갱신
 
-기존 원본 캐시를 SQLite로 옮겼습니다. 분석할 때는 다운로드하지 않고 DB에서 읽습니다. `node backend/db-update.mjs`는 한국 시각 전일까지의 새 날짜와 최근 며칠 정정만 확인합니다. 매일 자동 실행하는 예약은 아직 설정하지 않았습니다. 스키마·명령·업종 분류 준비 상태는 [DATABASE.md](DATABASE.md)에 설명했습니다.
+기존 원본 캐시를 SQLite로 옮겼습니다. 분석할 때는 다운로드하지 않고 DB에서 읽습니다. `node backend/db-update.mjs`는 한국 시각 전일까지의 새 날짜와 최근 며칠 정정만 확인합니다. 평일 14:30 갱신 예약을 등록했습니다. 데스크톱과 앱이 켜져 있어야 하며 첫 예약 실행은 확인 전입니다. 스키마·명령·업종 분류 준비 상태는 [DATABASE.md](DATABASE.md)에 설명했습니다.
 
 공식 출처, 이용 조건, 수집 절차와 연구 한계는 [DATA-SOURCES.md](DATA-SOURCES.md)를 참고하세요.
 

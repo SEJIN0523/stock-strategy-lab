@@ -1,3 +1,4 @@
+if(typeof window!=='undefined')window.addEventListener('hashchange',()=>{if(new URLSearchParams(location.hash.slice(1)).has('access'))location.reload();});
 const from64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 export async function decryptBundle(payload,keyText) {
   if(payload?.schema!=='daily.encrypted.v1'||typeof keyText!=='string'||!/^[A-Za-z0-9_-]{43}$/.test(keyText))throw Error('전용 접속 링크가 필요합니다.');
